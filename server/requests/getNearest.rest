@@ -1,0 +1,7 @@
+GET http://localhost:3001/api/getNearest
+Content-Type: application/json
+
+{
+    "lat":"40.68364106805742",
+    "long":"-73.96215039746568"
+}
