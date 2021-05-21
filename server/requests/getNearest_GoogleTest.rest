@@ -1,0 +1,7 @@
+GET http://localhost:3001/api/getNearest
+Content-Type: application/json
+
+{
+    "address":"537 Clinton Ave Brooklyn NY 11238"
+
+}

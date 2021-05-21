@@ -3,12 +3,7 @@ import LocationFinder from "../API/LocationFinder";
 import { useHistory } from "react-router-dom";
 import axios from 'axios'
 import {FeatureContext} from '../FeaturesContext'
-import Geocode from "react-geocode";
-console.log(require('dotenv').config())
-console.log(process.env.APIKEY)
-Geocode.setApiKey('AIzaSyBBPTStzchyysHGHgK2I9SZWhzdQi5Ln7U')
 
-Geocode.setLanguage("en");
 
 const Location = () => {
   const [features,setFeatures] = useContext(FeatureContext) 
@@ -28,31 +23,24 @@ const Location = () => {
   let history = useHistory();
   const sendAddress = (event) =>{
     event.preventDefault()
-    Geocode.fromAddress(address).then(
-      (response) => {
-        const { lat, lng } = response.results[0].geometry.location
-        const body = {lat:lat,long:lng,subway:subway,cuisine:cuisine}
-        const fetchData = async () =>{
-          try{
-            const response = await LocationFinder.get('/',{params:body})
-            setFeatures(response.data.features[0].json_build_object)
-            if (features.length == 0){
-              alert('no features returned')
-            } else{
-            history.push({
-              pathname:"/nearest",
-              coords: [lat,lng]
-            })
-            }
-           } catch(err){console.log(err)}  
+    const body = {address:address,subway:subway,cuisine:cuisine}
+    const fetchData = async () =>{
+      try{
+        const response = await LocationFinder.get('/',{params:body})
+        setFeatures(response.data.features[0].json_build_object)
+        if (features.length == 0){
+          alert('no features found')
+        } else{
+          history.push({
+          pathname:"/nearest",
+          coords: response.data.coords
+        })
         }
-        fetchData();
-      },
-      (error) => {
-        console.error(error);
-      } 
-    )
+      } catch(err){console.log(err)}  
     }
+    fetchData();
+  }
+  
 
   return (
    <>   

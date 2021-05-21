@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { useHistory } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import "../app.css"
 import {FeatureContext} from '../FeaturesContext'
@@ -11,7 +12,9 @@ const DistanceMap = () =>{
   const location = useLocation();
   const coords = location.coords
   console.log(features.features)
+  let history = useHistory();
   return(
+   <div> 
     <MapContainer center={coords} zoom={16} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -19,7 +22,7 @@ const DistanceMap = () =>{
       />
       {features.features.map(park => (
         <Marker
-          key={Math.floor(Math.random() * 1000000)}
+          key={Math.floor(Math.random() * 10000000)}
           position={[
           park.geometry.coordinates[1],
           park.geometry.coordinates[0]
@@ -32,6 +35,8 @@ const DistanceMap = () =>{
         </Marker>  
       ))}
     </MapContainer>
+    <button onClick = {() => history.push({pathname:"/"})}>back</button>
+   </div>
   )
 }
 
