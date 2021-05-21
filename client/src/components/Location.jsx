@@ -6,7 +6,8 @@ import {FeatureContext} from '../FeaturesContext'
 
 
 const Location = () => {
-  const [features,setFeatures] = useContext(FeatureContext) 
+  const {features, selectedFeature } = React.useContext(FeatureContext);
+  const [queriedFeatures, setQueriedFeatures] = features;
   const [address,setAddress] = useState('')
   const [subway, setLine] = useState('')
   const [cuisine,setCuisine] = useState('')
@@ -27,10 +28,11 @@ const Location = () => {
     const fetchData = async () =>{
       try{
         const response = await LocationFinder.get('/',{params:body})
-        setFeatures(response.data.features[0].json_build_object)
-        if (features.length == 0){
+        setQueriedFeatures(response.data.features[0].json_build_object)
+        if (queriedFeatures.length == 0){
           alert('no features found')
         } else{
+          console.log(queriedFeatures)
           history.push({
           pathname:"/nearest",
           coords: response.data.coords

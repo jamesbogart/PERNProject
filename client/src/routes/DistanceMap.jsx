@@ -2,17 +2,23 @@ import React, { useContext } from 'react'
 import { useHistory } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import "../app.css"
-import {FeatureContext} from '../FeaturesContext'
-import { useLocation } from "react-router-dom";
+import {FeatureContext, FeaturesProvider} from '../FeaturesContext'
+import {useLocation} from "react-router-dom";
+import {Table} from '../components/Table'
+
 
 //const coords = [ -73.96633891933756,40.6823254481556]
 
 const DistanceMap = () =>{
-  const [features,setFeatures] = useContext(FeatureContext)   
+  const { features, selectedfeature } = React.useContext(FeatureContext);
+  const [queriedFeatures, setQueriedFeatures] = features;
+  const [highlightedFeature, setHighlighted] = selectedfeature;  
   const location = useLocation();
   const coords = location.coords
-  console.log(features.features)
+  console.log(queriedFeatures.features)
   let history = useHistory();
+  const tableData = queriedFeatures.features.map(f => f.properties)
+
   return(
    <div> 
     <MapContainer center={coords} zoom={16} scrollWheelZoom={false}>
@@ -20,7 +26,7 @@ const DistanceMap = () =>{
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {features.features.map(park => (
+      {queriedFeatures.features.map(park => (
         <Marker
           key={Math.floor(Math.random() * 10000000)}
           position={[
@@ -36,6 +42,7 @@ const DistanceMap = () =>{
       ))}
     </MapContainer>
     <button onClick = {() => history.push({pathname:"/"})}>back</button>
+    <Table tabledata = {tableData}></Table>
    </div>
   )
 }

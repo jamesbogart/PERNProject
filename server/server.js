@@ -68,7 +68,7 @@ app.get('/api/getNearest',async (req, res) =>{
       q =  "select json_build_object('type', 'FeatureCollection','features', json_agg(ST_AsGeoJSON(t.*)::json)) from (SELECT f.name,f.amenity, ST_Transform (f.way, 4326) geom FROM osm.food_point f WHERE tags -> 'cuisine' like $1 ORDER BY ST_Distance(ST_Transform(f.way,4326), ST_SetSRID( ST_Point($2,$3 ), 4326) ) LIMIT 20) as t"
       values = [`%${cuisine}%`,lng,lat] 
     } else{
-      q = "select json_build_object('type', 'FeatureCollection','features', json_agg(ST_AsGeoJSON(t.*)::json)) from (SELECT f.name,f.amenity, ST_Transform (f.way, 4326) geom FROM osm.food_point f ORDER BY ST_Distance(ST_Transform(f.way,4326), ST_SetSRID( ST_Point($1,$2 ), 4326) ) LIMIT 20) as t"
+      q = "select json_build_object('type', 'FeatureCollection','features', json_agg(ST_AsGeoJSON(t.*)::json)) from (SELECT f.name,f.amenity,f.cuisine,f.opening_hours,f.website, ST_Transform (f.way, 4326) geom FROM osm.food_point f ORDER BY ST_Distance(ST_Transform(f.way,4326), ST_SetSRID( ST_Point($1,$2 ), 4326) ) LIMIT 20) as t"
       values = [lng,lat]
     }
     const coords = [lat,lng]  
